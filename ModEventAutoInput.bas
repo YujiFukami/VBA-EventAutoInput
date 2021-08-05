@@ -5,6 +5,7 @@ Option Explicit
 'イベントプロシージャはコピーして使う
 
 Const TextFileName$ = "単語登録.txt" '←←←←←←←←←←←←←←←←←←←←←←←
+
 Sub セルの値変更時に登録単語出力と単語登録() 'Worksheet_Changeプロシージャに中身コピー
 'セルの値変更時に登録単語出力と単語登録
 
@@ -23,16 +24,19 @@ Sub セルの値変更時に登録単語出力と単語登録() 'Worksheet_Changeプロシージャに中身
     End If
 
 End Sub
+
 Function 入力セル範囲取得()
     
     Set 入力セル範囲取得 = Range("B3:B1000") '←←←←←←←←←←←←←←←←←←←←←←←
 
 End Function
+
 Function 出力セル範囲取得()
     
     Set 出力セル範囲取得 = Range("C3:C1000") '←←←←←←←←←←←←←←←←←←←←←←←
 
 End Function
+
 Sub 入力値から関連語句出力(TargetCell As Range)
     
     Dim InputValue$
@@ -64,6 +68,7 @@ Sub 入力値から関連語句出力(TargetCell As Range)
     End If
     
 End Sub
+
 Sub 関連語句登録(InputStr$, KanrenStr$)
 
     If KanrenStr = "" Or InputStr = "" Then Exit Sub
