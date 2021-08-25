@@ -49,6 +49,6 @@
 -  入力値と関連語句を登録するテキストファイルの名前を定数「TextFileName」に設定する
 -  「入力セル範囲取得」に入力セルの範囲を設定する
 -  「出力セル範囲取得」に関連語句を出力するセルの範囲を設定する。
--  
+
 ![ModAutoInputの設定](https://user-images.githubusercontent.com/73621859/130877369-38cd43ae-cf43-4195-adf3-9d5773a7943f.jpg)
 
