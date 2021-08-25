@@ -4,7 +4,7 @@ Option Explicit
 '単語登録しながら単語の自動入力を行うためのイベントプロシージャ
 'ModFileと一緒に使うこと
 
-Const TextFileName$ = "単語登録.txt" '←←←←←←←←←←←←←←←←←←←←←←←
+Const TextFileName$ = "RegistStrings.txt" '←←←←←←←←←←←←←←←←←←←←←←←
 
 Private Function 入力セル範囲取得()
     
@@ -138,4 +138,5 @@ Private Sub 関連語句登録(InputStr$, KanrenStr$)
     Call OutputText(ThisWorkbook.Path, TextFileName, OutputList, Chr(9))
     
 End Sub
+
 
