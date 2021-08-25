@@ -20,6 +20,10 @@
 「C列」セルの値を入力（または変更）すると、「B列」セルの値の関連語句として登録される。
 ![実行サンプル中身](https://user-images.githubusercontent.com/73621859/130750404-cfae07c8-f0f8-4ece-82ae-9f32cbe9a107.jpg)
 
+使用デモ
+
+[![関連語句自動入力　説明](http://img.youtube.com/vi/A5ttsYXCxqw/0.jpg)](http://www.youtube.com/watch?v=A5ttsYXCxqw)
+
 ## 設定
 
 実行サンプル「Sample Event Auto Input.xlsm」の中の設定は以下の通り。
@@ -38,10 +42,12 @@
 　シートのセル値変更時実行時イベントプロシージャ「Worksheet_Change」プロシージャの中で、
 「セルの値変更時に登録単語出力と単語登録」を実行させる。
 　引数に「Target」を渡す。
+ 
 ![イベントプロシージャ設定](https://user-images.githubusercontent.com/73621859/130750342-8a148c22-baed-4989-8635-3b2e189c0a80.jpg)
 
  モジュール「ModAutoInput」の冒頭にての設定
 -  入力値と関連語句を登録するテキストファイルの名前を定数「TextFileName」に設定する
 -  「入力セル範囲取得」に入力セルの範囲を設定する
 -  「出力セル範囲取得」に関連語句を出力するセルの範囲を設定する。
+-  
 ![ModAutoInputの設定](https://user-images.githubusercontent.com/73621859/130750229-12265e8b-1af3-4766-bc6b-10fe763b79fd.jpg)
