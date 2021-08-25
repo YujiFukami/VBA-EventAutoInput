@@ -22,7 +22,7 @@
 
 使用デモ
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/A5ttsYXCxqw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![関連語句自動入力　説明](http://img.youtube.com/vi/A5ttsYXCxqw/0.jpg)](http://www.youtube.com/watch?v=A5ttsYXCxqw)
 
 ## 設定
 
@@ -42,10 +42,12 @@
 　シートのセル値変更時実行時イベントプロシージャ「Worksheet_Change」プロシージャの中で、
 「セルの値変更時に登録単語出力と単語登録」を実行させる。
 　引数に「Target」を渡す。
+ 
 ![イベントプロシージャ設定](https://user-images.githubusercontent.com/73621859/130750342-8a148c22-baed-4989-8635-3b2e189c0a80.jpg)
 
  モジュール「ModAutoInput」の冒頭にての設定
 -  入力値と関連語句を登録するテキストファイルの名前を定数「TextFileName」に設定する
 -  「入力セル範囲取得」に入力セルの範囲を設定する
 -  「出力セル範囲取得」に関連語句を出力するセルの範囲を設定する。
+-  
 ![ModAutoInputの設定](https://user-images.githubusercontent.com/73621859/130750229-12265e8b-1af3-4766-bc6b-10fe763b79fd.jpg)
