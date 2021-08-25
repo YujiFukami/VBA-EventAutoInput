@@ -2,59 +2,71 @@ Attribute VB_Name = "ModEventAutoInput"
 Option Explicit
 
 '単語登録しながら単語の自動入力を行うためのイベントプロシージャ
-'イベントプロシージャはコピーして使う
+'ModFileと一緒に使うこと
 
 Const TextFileName$ = "単語登録.txt" '←←←←←←←←←←←←←←←←←←←←←←←
 
-Sub セルの値変更時に登録単語出力と単語登録() 'Worksheet_Changeプロシージャに中身コピー
+Private Function 入力セル範囲取得()
+    
+    Set 入力セル範囲取得 = Sheet1.Range("B3:B50") '←←←←←←←←←←←←←←←←←←←←←←←
+
+End Function
+
+Private Function 出力セル範囲取得()
+    
+    Set 出力セル範囲取得 = Sheet1.Range("C3:C50") '←←←←←←←←←←←←←←←←←←←←←←←
+
+End Function
+
+Sub セルの値変更時に登録単語出力と単語登録(ByVal Target As Range) 'Worksheet_Changeプロシージャで実行
 'セルの値変更時に登録単語出力と単語登録
 
-    Dim InputCell As Range, OutputCell As Range '入力出力セル
-    Set InputCell = 入力セル範囲取得
-    Set OutputCell = 出力セル範囲取得
+    If VarType(Target.Value) >= vbArray Then
+        '変更セルが複数の場合は1番目のセルだけ対象とする。
+        Set Target = Target(1)
+    End If
     
-    If VarType(Target.Value) >= vbArray Then Exit Sub
-    
-    If Not Intersect(InputCell, Target) Is Nothing Then
-        Application.EnableEvents = False
-        Call 入力値から関連語句出力(Target, Target.Offset(0, 1)) '←←←←←←←←←←←←←←←←←←←←←←←
+    If Not Intersect(入力セル範囲取得, Target) Is Nothing Then
+        '変更したセルが入力セル範囲の場合
+        Application.EnableEvents = False '関連語句出力後のイベント発生を停止
+        Call 入力値から関連語句出力(Target)
         Application.EnableEvents = True
-    ElseIf Not Intersect(OutputCell, Target) Is Nothing Then
+    ElseIf Not Intersect(出力セル範囲取得, Target) Is Nothing Then
+        '変更したセルが出力セル範囲の場合
         Call 関連語句登録(Target.Offset(0, -1).Value, Target.Value)
     End If
-
+    
 End Sub
 
-Function 入力セル範囲取得()
-    
-    Set 入力セル範囲取得 = Range("B3:B1000") '←←←←←←←←←←←←←←←←←←←←←←←
-
-End Function
-
-Function 出力セル範囲取得()
-    
-    Set 出力セル範囲取得 = Range("C3:C1000") '←←←←←←←←←←←←←←←←←←←←←←←
-
-End Function
-
-Sub 入力値から関連語句出力(TargetCell As Range)
+Private Sub 入力値から関連語句出力(TargetCell As Range)
     
     Dim InputValue$
     InputValue = TargetCell.Value
         
+     '入力範囲と出力範囲からオフセット量計算
+    Dim InputStartCell As Range, OutputStartCell As Range
+    Dim OffsetRow&, OffsetCol&
+    Set InputStartCell = 入力セル範囲取得(1)
+    Set OutputStartCell = 出力セル範囲取得(1)
+    OffsetRow = OutputStartCell.Row - InputStartCell.Row
+    OffsetCol = OutputStartCell.Column - InputStartCell.Column
+    
     If InputValue = "" Then
-        TargetCell.Offset(0, 1) = ""
+        TargetCell.Offset(OffsetRow, OffsetCol) = ""
         Exit Sub
     End If
-        
+    
+    '登録済みの関連語句をテキストファイルから読み込み
     Dim TextList
-    TextList = InputText(ThisWorkbook.Path & "\" & TextFileName, ",")
+    TextList = InputText(ThisWorkbook.Path & "\" & TextFileName, Chr(9))
     
     Dim KanrenStr$ '関連語句
     Dim I%, J%, K%, M%, N% '数え上げ用(Integer型)
     
+
+    '関連語句出力
     If UBound(TextList, 1) = 1 Then
-        '何もしない
+        '登録した単語が一つもない場合は何もしない
     Else
         For I = 2 To UBound(TextList, 1)
             If InputValue = TextList(I, 1) Then
@@ -63,18 +75,18 @@ Sub 入力値から関連語句出力(TargetCell As Range)
             End If
         Next I
         
-        TargetCell.Offset(0, 1).Value = KanrenStr
+        TargetCell.Offset(OffsetRow, OffsetCol).Value = KanrenStr
         
     End If
     
 End Sub
-
-Sub 関連語句登録(InputStr$, KanrenStr$)
-
+Private Sub 関連語句登録(InputStr$, KanrenStr$)
+    
+    '空白は登録しない
     If KanrenStr = "" Or InputStr = "" Then Exit Sub
     
     Dim TextList
-    TextList = InputText(ThisWorkbook.Path & "\" & TextFileName, ",")
+    TextList = InputText(ThisWorkbook.Path & "\" & TextFileName, Chr(9))
     
     Dim I%, J%, K%, M%, N% '数え上げ用(Integer型)
     Dim OutputList
@@ -122,6 +134,8 @@ Sub 関連語句登録(InputStr$, KanrenStr$)
                 
     End If
     
-    Call OutputText(ThisWorkbook.Path, TextFileName, OutputList, ",")
+    '編集後のテキストデータを出力
+    Call OutputText(ThisWorkbook.Path, TextFileName, OutputList, Chr(9))
     
 End Sub
+
