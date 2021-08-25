@@ -20,6 +20,9 @@
 「C列」セルの値を入力（または変更）すると、「B列」セルの値の関連語句として登録される。
 ![実行サンプル中身](https://user-images.githubusercontent.com/73621859/130750404-cfae07c8-f0f8-4ece-82ae-9f32cbe9a107.jpg)
 
+使用デモ
+https://user-images.githubusercontent.com/73621859/130791021-31265529-5f2c-49e9-9d4a-35bdff7bd6ff.mp4
+
 ## 設定
 
 実行サンプル「実行サンプル 関連語句自動入力.xlsm」の中の設定は以下の通り。
