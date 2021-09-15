@@ -1,6 +1,4 @@
 # VBA-EventAutoInput
-# イベント機能活用による自動バックアップ用VBA
-
 - License: The MIT license
 
 - Copyright (c) 2021 YujiFukami
@@ -9,11 +7,18 @@
 
 - 開発テスト環境 OS: Windows 10 Pro
 
-その他、実行環境など報告していただくと感謝感激雨霰。
+実行環境など報告していただくと感謝感激雨霰。
+
+# 説明
+あらかじめ入力値とその関連語句を登録しておき、セルに入力値が入力されると関連語句が右のセルに自動入力される。
+入力値と関連語句の登録はセルに入力しながら行える。
+
+
+## 活用例
+セルの手入力作業の高速化
+
 
 # 使い方
-
-## 「Sample Event Auto Input.xlsm」の使い方
 
 「B列」セルの値を入力すると、入力された値の関連語句を「C列」セルに自動出力する。
 
@@ -24,18 +29,16 @@
 
 [![関連語句自動入力　説明](http://img.youtube.com/vi/A5ttsYXCxqw/0.jpg)](http://www.youtube.com/watch?v=A5ttsYXCxqw)
 
-## 設定
 
-実行サンプル「Sample Event Auto Input.xlsm」の中の設定は以下の通り。
+## 設定
+実行サンプル「Sample_EventAutoInput.xlsm」の中の設定は以下の通り。
 
 ### 設定1（使用モジュール）
 
 -  ModEventAutoInput.bas
--  ModFile
 
 ### 設定2（参照ライブラリ）
-
--  特になし
+なし
 
 ### 設定3 (イベントプロシージャ設定)
 
