@@ -1,19 +1,18 @@
 Attribute VB_Name = "ModEventAutoInput"
 Option Explicit
 
-'EventAutoInput	Œ³êŠFFukamiAddins3.ModEventAutoInput
-'“ü—ÍƒZƒ‹”ÍˆÍæ“¾	Œ³êŠFFukamiAddins3.ModEventAutoInput
-'o—ÍƒZƒ‹”ÍˆÍæ“¾	Œ³êŠFFukamiAddins3.ModEventAutoInput
-'“ü—Í’l‚©‚çŠÖ˜AŒê‹åo—Í	Œ³êŠFFukamiAddins3.ModEventAutoInput
-'InputText	Œ³êŠFFukamiAddins3.ModFile
-'InputTextShiftJIS	Œ³êŠFFukamiAddins3.ModFile
-'GetRowCountTextFile	Œ³êŠFFukamiAddins3.ModFile
-'InputTextUTF8	Œ³êŠFFukamiAddins3.ModFile
-'fncGetCharset	Œ³êŠFFukamiAddins3.ModFile
-'ŠÖ˜AŒê‹å“o˜^	Œ³êŠFFukamiAddins3.ModEventAutoInput
-'OutputText	Œ³êŠFFukamiAddins3.ModFile
-'Lib“ü—Í”z—ñ‚ğˆ——p‚É•ÏŠ·	Œ³êŠFFukamiAddins3.ModFile
-
+'EventAutoInput           EEEŒ³êŠFFukamiAddins3.ModEventAutoInput
+'“ü—ÍƒZƒ‹”ÍˆÍæ“¾         EEEŒ³êŠFFukamiAddins3.ModEventAutoInput
+'o—ÍƒZƒ‹”ÍˆÍæ“¾         EEEŒ³êŠFFukamiAddins3.ModEventAutoInput
+'“ü—Í’l‚©‚çŠÖ˜AŒê‹åo—Í   EEEŒ³êŠFFukamiAddins3.ModEventAutoInput
+'InputText                EEEŒ³êŠFFukamiAddins3.ModFile          
+'InputTextShiftJIS        EEEŒ³êŠFFukamiAddins3.ModFile          
+'GetRowCountTextFile      EEEŒ³êŠFFukamiAddins3.ModFile          
+'InputTextUTF8            EEEŒ³êŠFFukamiAddins3.ModFile          
+'fncGetCharset            EEEŒ³êŠFFukamiAddins3.ModFile          
+'ŠÖ˜AŒê‹å“o˜^             EEEŒ³êŠFFukamiAddins3.ModEventAutoInput
+'OutputText               EEEŒ³êŠFFukamiAddins3.ModFile          
+'Lib“ü—Í”z—ñ‚ğˆ——p‚É•ÏŠ·EEEŒ³êŠFFukamiAddins3.ModFile          
 
 '------------------------------
 
@@ -28,7 +27,7 @@ Const TextFileName$ = "RegistStrings.txt" '©©©©©©©©©©©©©©©©©©
 '------------------------------
 
 
-Sub EventAutoInput(ByVal Target As Range) 'Worksheet_ChangeƒvƒƒV[ƒWƒƒ‚ÅÀs
+Public Sub EventAutoInput(ByVal Target As Range) 'Worksheet_ChangeƒvƒƒV[ƒWƒƒ‚ÅÀs
 'ƒZƒ‹‚Ì’l•ÏX‚É“o˜^’PŒêo—Í‚Æ’PŒê“o˜^
 
     If VarType(Target.Value) >= vbArray Then
@@ -108,7 +107,7 @@ Private Function InputText(FilePath$, Optional KugiriMoji$ = "")
 '•¶šƒR[ƒh‚Í©“®“I‚É”»’è‚µ‚Ä“ÇŒ`®‚ğ•ÏX‚·‚é
 '20210721
 
-'FilePathEEEƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚Ìƒtƒ‹ƒpƒX
+'FilePath  EEEƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚Ìƒtƒ‹ƒpƒX
 'KugiriMojiEEEƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚ñ‚Å‹æØ‚è•¶š‚Å‹æØ‚Á‚Ä”z—ñ‚Åo—Í‚·‚éê‡‚Ì‹æØ‚è•¶š
 
     'ƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚Ì‘¶İŠm”F
@@ -479,10 +478,10 @@ Private Sub OutputText(FolderPath$, FileName$, ByVal OutputHairetu, Optional Kug
 'w’è”z—ñ‚ğtxt‚Åo—Í‚·‚é
 '20210721
    
-'FolderPathEEEo—Íæ‚ÌƒtƒHƒ‹ƒ_ƒpƒX
-'FileNameEEEo—Í‚·‚éƒtƒ@ƒCƒ‹–¼iŠg’£q‚Í‚Â‚¯‚éj
+'FolderPath   EEEo—Íæ‚ÌƒtƒHƒ‹ƒ_ƒpƒX
+'FileName     EEEo—Í‚·‚éƒtƒ@ƒCƒ‹–¼iŠg’£q‚Í‚Â‚¯‚éj
 'OutputHairetuEEEo—Í‚·‚é”z—ñ
-'KugiriMojiEEE•¶š—ñŠÔ‚Ì‹æØ‚è•¶š
+'KugiriMoji   EEE•¶š—ñŠÔ‚Ì‹æØ‚è•¶š
 
     Dim I%, J%, K%, M%, N% '”‚¦ã‚°—p(IntegerŒ^)
     
