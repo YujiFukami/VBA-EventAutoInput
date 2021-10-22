@@ -3,29 +3,22 @@ Option Explicit
 
 'EventAutoInput           ・・・元場所：FukamiAddins3.ModEventAutoInput
 '入力セル範囲取得         ・・・元場所：FukamiAddins3.ModEventAutoInput
-'出力セル範囲取得         ・・・元場所：FukamiAddins3.ModEventAutoInput
 '入力値から関連語句出力   ・・・元場所：FukamiAddins3.ModEventAutoInput
+'出力セル範囲取得         ・・・元場所：FukamiAddins3.ModEventAutoInput
 'InputText                ・・・元場所：FukamiAddins3.ModFile          
-'InputTextShiftJIS        ・・・元場所：FukamiAddins3.ModFile          
-'GetRowCountTextFile      ・・・元場所：FukamiAddins3.ModFile          
-'InputTextUTF8            ・・・元場所：FukamiAddins3.ModFile          
 'fncGetCharset            ・・・元場所：FukamiAddins3.ModFile          
+'InputTextUTF8            ・・・元場所：FukamiAddins3.ModFile          
+'GetRowCountTextFile      ・・・元場所：FukamiAddins3.ModFile          
+'InputTextShiftJIS        ・・・元場所：FukamiAddins3.ModFile          
 '関連語句登録             ・・・元場所：FukamiAddins3.ModEventAutoInput
 'OutputText               ・・・元場所：FukamiAddins3.ModFile          
 'Lib入力配列を処理用に変換・・・元場所：FukamiAddins3.ModFile          
 
-'------------------------------
-
-
-'単語登録しながら単語の自動入力を行うためのイベントプロシージャ
-'ModFileと一緒に使うこと
-
-Const TextFileName$ = "RegistStrings.txt" '←←←←←←←←←←←←←←←←←←←←←←←
-
-'------------------------------
-
-'------------------------------
-
+'宣言セクション※※※※※※※※※※※※※※※※※※※※※※※※※※※
+'-----------------------------------
+'元場所:TextFileName
+Const TextFileName As String = "RegistStrings.txt" '←←←←←←←←←←←←←←←←←←←←←←←
+'宣言セクション終了※※※※※※※※※※※※※※※※※※※※※※※※※※※
 
 Public Sub EventAutoInput(ByVal Target As Range) 'Worksheet_Changeプロシージャで実行
 'セルの値変更時に登録単語出力と単語登録
@@ -53,20 +46,16 @@ Private Function 入力セル範囲取得()
 
 End Function
 
-Private Function 出力セル範囲取得()
-    
-    Set 出力セル範囲取得 = Sheet1.Range("C3:C50") '←←←←←←←←←←←←←←←←←←←←←←←
-
-End Function
-
 Private Sub 入力値から関連語句出力(TargetCell As Range)
     
-    Dim InputValue$
+    Dim InputValue As String
     InputValue = TargetCell.Value
         
      '入力範囲と出力範囲からオフセット量計算
-    Dim InputStartCell As Range, OutputStartCell As Range
-    Dim OffsetRow&, OffsetCol&
+    Dim InputStartCell  As Range
+    Dim OutputStartCell As Range
+    Dim OffsetRow       As Long
+    Dim OffsetCol       As Long
     Set InputStartCell = 入力セル範囲取得(1)
     Set OutputStartCell = 出力セル範囲取得(1)
     OffsetRow = OutputStartCell.Row - InputStartCell.Row
@@ -81,9 +70,8 @@ Private Sub 入力値から関連語句出力(TargetCell As Range)
     Dim TextList
     TextList = InputText(ThisWorkbook.Path & "\" & TextFileName, Chr(9))
     
-    Dim KanrenStr$ '関連語句
-    Dim I%, J%, K%, M%, N% '数え上げ用(Integer型)
-    
+    Dim KanrenStr As String '関連語句
+    Dim I As Integer
 
     '関連語句出力
     If UBound(TextList, 1) = 1 Then
@@ -102,7 +90,13 @@ Private Sub 入力値から関連語句出力(TargetCell As Range)
     
 End Sub
 
-Private Function InputText(FilePath$, Optional KugiriMoji$ = "")
+Private Function 出力セル範囲取得()
+    
+    Set 出力セル範囲取得 = Sheet1.Range("C3:C50") '←←←←←←←←←←←←←←←←←←←←←←←
+
+End Function
+
+Private Function InputText(FilePath As String, Optional KugiriMoji As String = "")
 'テキストファイルを読み込んで配列で返す
 '文字コードは自動的に判定して読込形式を変更する
 '20210721
@@ -131,9 +125,14 @@ Private Function InputText(FilePath$, Optional KugiriMoji$ = "")
     
     'テキストファイル読込
     Dim Output
-    Dim RowCount&
-    Dim I&, J&, K&, M&, N& '数え上げ用(Long型)
-    Dim FileNo%, Buffer$
+    Dim RowCount As Long
+    Dim I        As Long
+    Dim J        As Long
+    Dim K        As Long
+    Dim M        As Long
+    Dim N        As Long
+    Dim FileNo   As Integer
+    Dim Buffer   As String
     
     If IsEmpty(strCode) = False Then 'UTF8版の場合※※※※※※※※※※※※※※※※※
    
@@ -149,149 +148,22 @@ Private Function InputText(FilePath$, Optional KugiriMoji$ = "")
     
 End Function
 
-Private Function InputTextShiftJIS(FilePath$, Optional KugiriMoji$ = "")
-'テキストファイルを読み込む ShiftJIS形式専用
-'20210721
-
-'FilePath・・・テキストファイルのフルパス
-'KugiriMoji・・・テキストファイルを読み込んで区切り文字で区切って配列で出力する場合の区切り文字
-    
-    Dim I&, J&, K&, M&, N& '数え上げ用(Long型)
-    Dim FileNo%, Buffer$, SplitBuffer
-    Dim Output1, Output2
-    ' FreeFile値の取得(以降この値で入出力する)
-    FileNo = FreeFile
-    
-    N = GetRowCountTextFile(FilePath)
-    ReDim Output1(1 To N)
-    ' 指定ファイルをOPEN(入力モード)
-    Open FilePath For Input As #FileNo
-            
-    ' ファイルのEOF(End of File)まで繰り返す
-    I = 0
-    M = 0
-    Do Until EOF(FileNo)
-        Line Input #FileNo, Buffer
-        I = I + 1
-        Output1(I) = Buffer '1次読込み
-        
-        If KugiriMoji <> "" Then '文字で区切る場合は区切り個数を計算
-            '区切り文字による区切り個数の最大値を常に更新していく
-            M = WorksheetFunction.Max(M, UBound(Split(Buffer, KugiriMoji)) + 1)
-        End If
-    Loop
-    
-    Close #FileNo
-    
-    '区切り文字の処理
-    If KugiriMoji = "" Then
-        '区切り文字なし
-        Output2 = Output1
-    Else
-        ReDim Output2(1 To N, 1 To M)
-        For I = 1 To N
-            Buffer = Output1(I)
-            SplitBuffer = Split(Buffer, KugiriMoji)
-            For J = 0 To UBound(SplitBuffer)
-                Output2(I, J + 1) = SplitBuffer(J)
-            Next J
-        Next I
-    End If
-    
-    InputTextShiftJIS = Output2
-
-End Function
-
-Private Function GetRowCountTextFile(FilePath$)
-'テキストファイル、CSVファイルの行数を取得する
-'20210720
-
-    'ファイルの存在確認
-    If Dir(FilePath, vbDirectory) = "" Then
-        MsgBox ("「" & FilePath & "」がありません" & vbLf & _
-                "終了します")
-        End
-    End If
-    
-    Dim Output&
-    With CreateObject("Scripting.FileSystemObject")
-        Output = .OpenTextFile(FilePath, 8).Line
-    End With
-    
-    GetRowCountTextFile = Output
-    
-End Function
-
-Private Function InputTextUTF8(FilePath$, Optional KugiriMoji$ = "")
-'テキストファイルを読み込む UTF8形式専用
-'20210721
-
-'FilePath・・・テキストファイルのフルパス
-'KugiriMoji・・・テキストファイルを読み込んで区切り文字で区切って配列で出力する場合の区切り文字
-
-    Dim I&, J&, K&, M&, N& '数え上げ用(Long型)
-    Dim Buffer$, SplitBuffer
-    Dim Output1, Output2
-    
-    N = GetRowCountTextFile(FilePath)
-    ReDim Output1(1 To N)
-    
-    With CreateObject("ADODB.Stream")
-        .Charset = "UTF-8"
-        .Type = 2 ' ファイルのタイプ(1:バイナリ 2:テキスト)
-        .Open
-        .LineSeparator = 10 '改行コード
-        .LoadFromFile (FilePath)
-        
-        For I = 1 To N
-            Buffer = .ReadText(-2)
-            Output1(I) = Buffer
-            If KugiriMoji <> "" Then '文字で区切る場合は区切り個数を計算
-                '区切り文字による区切り個数の最大値を常に更新していく
-                M = WorksheetFunction.Max(M, UBound(Split(Buffer, KugiriMoji)) + 1)
-            End If
-        Next I
-        .Close
-    End With
-    
-    '区切り文字の処理
-    If KugiriMoji = "" Then
-        '区切り文字なし
-        Output2 = Output1
-    Else
-        ReDim Output2(1 To N, 1 To M)
-        For I = 1 To N
-            Buffer = Output1(I)
-            SplitBuffer = Split(Buffer, KugiriMoji)
-            For J = 0 To UBound(SplitBuffer)
-                Output2(I, J + 1) = SplitBuffer(J)
-            Next J
-        Next I
-    End If
-    
-    InputTextUTF8 = Output2
-    
-End Function
-
 Private Function fncGetCharset(FileName As String) As String
 '20200909追加
 'テキストファイルの文字コードを返す
 '参考https://popozure.info/20190515/14201
 
-    Dim I                   As Long
-    
-    Dim hdlFile             As Long
-    Dim lngFileLen          As Long
-    
-    Dim bytFile()           As Byte
-    Dim b1                  As Byte
-    Dim b2                  As Byte
-    Dim b3                  As Byte
-    Dim b4                  As Byte
-    
-    Dim lngSJIS             As Long
-    Dim lngUTF8             As Long
-    Dim lngEUC              As Long
+    Dim I          As Long
+    Dim hdlFile    As Long
+    Dim lngFileLen As Long
+    Dim bytFile()  As Byte
+    Dim b1         As Byte
+    Dim b2         As Byte
+    Dim b3         As Byte
+    Dim b4         As Byte
+    Dim lngSJIS    As Long
+    Dim lngUTF8    As Long
+    Dim lngEUC     As Long
     
     On Error Resume Next
     
@@ -415,7 +287,143 @@ Private Function fncGetCharset(FileName As String) As String
     
 End Function
 
-Private Sub 関連語句登録(InputStr$, KanrenStr$)
+Private Function InputTextUTF8(FilePath As String, Optional KugiriMoji As String = "")
+'テキストファイルを読み込む UTF8形式専用
+'20210721
+
+'FilePath・・・テキストファイルのフルパス
+'KugiriMoji・・・テキストファイルを読み込んで区切り文字で区切って配列で出力する場合の区切り文字
+
+    Dim I          As Long
+    Dim J          As Long
+    Dim M          As Long
+    Dim N          As Long '数え上げ用(Long型)
+    Dim Buffer     As String
+    Dim SplitBuffer
+    Dim Output1
+    Dim Output2
+    
+    N = GetRowCountTextFile(FilePath)
+    ReDim Output1(1 To N)
+    
+    With CreateObject("ADODB.Stream")
+        .Charset = "UTF-8"
+        .Type = 2 ' ファイルのタイプ(1:バイナリ 2:テキスト)
+        .Open
+        .LineSeparator = 10 '改行コード
+        .LoadFromFile (FilePath)
+        
+        For I = 1 To N
+            Buffer = .ReadText(-2)
+            Output1(I) = Buffer
+            If KugiriMoji <> "" Then '文字で区切る場合は区切り個数を計算
+                '区切り文字による区切り個数の最大値を常に更新していく
+                M = WorksheetFunction.Max(M, UBound(Split(Buffer, KugiriMoji)) + 1)
+            End If
+        Next I
+        .Close
+    End With
+    
+    '区切り文字の処理
+    If KugiriMoji = "" Then
+        '区切り文字なし
+        Output2 = Output1
+    Else
+        ReDim Output2(1 To N, 1 To M)
+        For I = 1 To N
+            Buffer = Output1(I)
+            SplitBuffer = Split(Buffer, KugiriMoji)
+            For J = 0 To UBound(SplitBuffer)
+                Output2(I, J + 1) = SplitBuffer(J)
+            Next J
+        Next I
+    End If
+    
+    InputTextUTF8 = Output2
+    
+End Function
+
+Private Function GetRowCountTextFile(FilePath As String)
+'テキストファイル、CSVファイルの行数を取得する
+'20210720
+
+    'ファイルの存在確認
+    If Dir(FilePath, vbDirectory) = "" Then
+        MsgBox ("「" & FilePath & "」がありません" & vbLf & _
+                "終了します")
+        End
+    End If
+    
+    Dim Output As Long
+    With CreateObject("Scripting.FileSystemObject")
+        Output = .OpenTextFile(FilePath, 8).Line
+    End With
+    
+    GetRowCountTextFile = Output
+    
+End Function
+
+Private Function InputTextShiftJIS(FilePath As String, Optional KugiriMoji As String = "")
+'テキストファイルを読み込む ShiftJIS形式専用
+'20210721
+
+'FilePath・・・テキストファイルのフルパス
+'KugiriMoji・・・テキストファイルを読み込んで区切り文字で区切って配列で出力する場合の区切り文字
+    
+    Dim I          As Long
+    Dim J          As Long
+    Dim K          As Long
+    Dim M          As Long
+    Dim N          As Long
+    Dim FileNo     As Integer
+    Dim Buffer     As String
+    Dim SplitBuffer
+    Dim Output1
+    Dim Output2
+    ' FreeFile値の取得(以降この値で入出力する)
+    FileNo = FreeFile
+    
+    N = GetRowCountTextFile(FilePath)
+    ReDim Output1(1 To N)
+    ' 指定ファイルをOPEN(入力モード)
+    Open FilePath For Input As #FileNo
+            
+    ' ファイルのEOF(End of File)まで繰り返す
+    I = 0
+    M = 0
+    Do Until EOF(FileNo)
+        Line Input #FileNo, Buffer
+        I = I + 1
+        Output1(I) = Buffer '1次読込み
+        
+        If KugiriMoji <> "" Then '文字で区切る場合は区切り個数を計算
+            '区切り文字による区切り個数の最大値を常に更新していく
+            M = WorksheetFunction.Max(M, UBound(Split(Buffer, KugiriMoji)) + 1)
+        End If
+    Loop
+    
+    Close #FileNo
+    
+    '区切り文字の処理
+    If KugiriMoji = "" Then
+        '区切り文字なし
+        Output2 = Output1
+    Else
+        ReDim Output2(1 To N, 1 To M)
+        For I = 1 To N
+            Buffer = Output1(I)
+            SplitBuffer = Split(Buffer, KugiriMoji)
+            For J = 0 To UBound(SplitBuffer)
+                Output2(I, J + 1) = SplitBuffer(J)
+            Next J
+        Next I
+    End If
+    
+    InputTextShiftJIS = Output2
+
+End Function
+
+Private Sub 関連語句登録(InputStr As String, KanrenStr As String)
     
     '空白は登録しない
     If KanrenStr = "" Or InputStr = "" Then Exit Sub
@@ -423,10 +431,12 @@ Private Sub 関連語句登録(InputStr$, KanrenStr$)
     Dim TextList
     TextList = InputText(ThisWorkbook.Path & "\" & TextFileName, Chr(9))
     
-    Dim I%, J%, K%, M%, N% '数え上げ用(Integer型)
+    Dim I                  As Integer
+    Dim J                  As Integer
+    Dim N                  As Integer
     Dim OutputList
     Dim TorokuzumiNaraTrue As Boolean
-    Dim TorokuZumiNum%
+    Dim TorokuZumiNum      As Integer
     If UBound(TextList, 1) = 1 Then
         '最初から登録
         ReDim OutputList(1 To 2, 1 To 2)
@@ -474,7 +484,7 @@ Private Sub 関連語句登録(InputStr$, KanrenStr$)
     
 End Sub
 
-Private Sub OutputText(FolderPath$, FileName$, ByVal OutputHairetu, Optional KugiriMoji$ = ",")
+Private Sub OutputText(FolderPath As String, FileName As String, ByVal OutputHairetu, Optional KugiriMoji As String = ",")
 '指定配列をtxtで出力する
 '20210721
    
@@ -483,7 +493,10 @@ Private Sub OutputText(FolderPath$, FileName$, ByVal OutputHairetu, Optional Kug
 'OutputHairetu・・・出力する配列
 'KugiriMoji   ・・・文字列間の区切り文字
 
-    Dim I%, J%, K%, M%, N% '数え上げ用(Integer型)
+    Dim I As Integer
+    Dim J As Integer
+    Dim M As Integer
+    Dim N As Integer
     
     '1次元配列は2次元配列に変換
     OutputHairetu = Lib入力配列を処理用に変換(OutputHairetu)
@@ -523,8 +536,11 @@ Private Function Lib入力配列を処理用に変換(InputHairetu)
 '20210721
 
     Dim Output
-    Dim I%, J%, K%, M%, N% '数え上げ用(Integer型)
-    Dim Base1%, Base2%
+    Dim I     As Integer
+    Dim M     As Integer
+    Dim N     As Integer
+    Dim Base1 As Integer
+    Dim Base2 As Integer
     If IsArray(InputHairetu) = False Then
         '配列でない場合(数値か文字列)
         ReDim Output(1 To 1, 1 To 1)
